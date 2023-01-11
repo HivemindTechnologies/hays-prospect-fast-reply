@@ -1,7 +1,12 @@
 # hays-prospect-fast-reply
 
+## Scenario
+- Sales representatives send job offers to Candidates/Prospects. 
+- Candidates/Prospects can then answer on job offer.
+
 ## Project Goal
-- bla
+- Synchronize dedicated data from IRIS to Salesforce Marketing Cloud
+- Synchronize dedicated data from Salesforce Marketing Cloud back to IRIS.
 
 ## Specifications, Requirements and User Stories
 
@@ -9,7 +14,8 @@
 
 ## Components
 
-- bla
+- Get change events about IRIS fields from ??? database
+- ...
 
 ### Architecture and Workflow
 
@@ -29,29 +35,6 @@ sfmcT[SFMC transformer]
 ```
 
 #### Components Overview
-```mermaid
-flowchart LR
-is(IrisDB)
-deb[debezium]
-dbex[db-exporter-prospect]
-abcon[airbyte-connect: SFMC prospect]
-sfmc(Data Extension SFMC)
-sfmcT[SFMC transformer]
-
-    is --> deb
-    
-    subgraph iris-transformer
-        deb -->|kafka:iris.debezium.DBNAME.TABLENAME| dbex
-        dbex -->|kafka:iris.dbexporter.prospect| abcon
-    end
-
-    abcon --- sfmc
-    is ---|query| dbex
-    
-    sfmcT --- sfmc
-    is --- sfmcT  
-    
-```
 
 ```mermaid
 flowchart LR

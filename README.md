@@ -43,6 +43,7 @@ deb[debezium]
 dbex[db-exporter-prospect]
 abcon[airbyte-connect: SFMC prospect]
 sfmc(Data Extension SFMC)
+sfmc2k(kafka-connect: SFMC response)
     is --> deb
     
     subgraph iris-transformer
@@ -53,10 +54,10 @@ sfmc(Data Extension SFMC)
     abcon --- sfmc
     is ---|query| dbex
     
-    sfmc --- airbyte-connect
+    sfmc --- sfmc2k
     
     subgraph SFMC-transformer
-        airbyte-connect  -->|kafka:sfmc.response| sfmc-exporter
+        sfmc2k  -->|kafka:sfmc.response| sfmc-exporter
     end
     
     sfmc-exporter ---|kafka:sfmc.response.iris| is

@@ -28,10 +28,9 @@ sfmc(Data Extension SFMC)
 sfmcT[SFMC transformer]
 
     is --> isT
-    isT --- sfmc
-    sfmcT --- sfmc
-    is --- sfmcT  
-    
+    isT --> sfmc
+    sfmc --> sfmcT
+    sfmcT --> is
 ```
 
 #### Components Overview
@@ -51,16 +50,16 @@ sfmc2k(kafka-connect: SFMC response)
         dbex -->|kafka:iris.dbexporter.prospect| abcon
     end
 
-    abcon --- sfmc
-    is ---|query| dbex
+    abcon --> sfmc
+    dbex -->|query| is
     
-    sfmc --- sfmc2k
+    sfmc --> sfmc2k
     
     subgraph SFMC-transformer
         sfmc2k  -->|kafka:sfmc.response| sfmc-exporter
     end
     
-    sfmc-exporter ---|kafka:sfmc.response.iris| is
+    sfmc-exporter -->|kafka:sfmc.response.iris| is
     
     
 ```

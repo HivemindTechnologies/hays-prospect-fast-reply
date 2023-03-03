@@ -9,6 +9,7 @@ import pureconfig.module.catseffect.syntax.*
 
 import scala.concurrent.duration.*
 import scala.util.chaining.*
+import cats.effect.kernel.Resource
 
 object Main extends IOApp.Simple:
   override def run: IO[Unit] =
@@ -17,7 +18,8 @@ object Main extends IOApp.Simple:
       config    <- configFX
       _         <- log.info(show"Service started")
       _         <- log.debug(config.show)
-      nothing   <- Service(config).dataflow.logErrorAndRestart.compile.drain
+      client     = Resource.make(IO(DefaultMarketingCloudClient()))(_ => IO.unit)
+      nothing   <- client.use(Service(config, _).dataflow.logErrorAndRestart.compile.drain)
     yield nothing
 
   def logger = Slf4jLogger.create[IO]

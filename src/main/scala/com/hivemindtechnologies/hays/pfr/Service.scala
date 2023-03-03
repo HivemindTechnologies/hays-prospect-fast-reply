@@ -12,7 +12,7 @@ import scala.util.chaining.*
 
 import Kafka.{*, given}
 
-class Service(config: AppConfig)(using Log):
+class Service(config: AppConfig, client: MarketingCloudClient)(using Log):
   val kafka = Kafka(config.kafka)
 
   def dataflow: Stream[IO, Unit] =
@@ -24,10 +24,7 @@ class Service(config: AppConfig)(using Log):
         case (Left(err), in) =>
           log.error(err)(show"Decoding failed for ${in.offset.offsetAndMetadata}")
         case (Right(bp), _) =>
-          sendRecordToMarketingCloud(bp)
+          client.send(bp)
       }
       .map(_._2.offset)
       .through(kafka.batchCommitOffsets)
-
-  def sendRecordToMarketingCloud(bp: BusinessPartner): IO[Unit] = 
-    log.info(show"Sending $bp")

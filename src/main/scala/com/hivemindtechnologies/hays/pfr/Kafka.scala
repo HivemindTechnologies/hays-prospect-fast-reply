@@ -21,8 +21,16 @@ class Kafka(config: KafkaConfig):
     then _.evalMap(_.commit)
     else commitBatchWithin[IO](config.batchCommitSize, config.batchCommitInterval)
 
+  def producer[A]: Pipe[IO, ProducerRecords[A, String, String], ProducerResult[A, String, String]] =
+    KafkaProducer.pipe[IO, String, String, A](config.producerSettings)
+
+  def passthroughProducer[A]: Pipe[IO, ProducerRecords[A, String, String], A] = producer[A].andThen(_.map(_.passthrough))
+
 object Kafka:
   type Committable = CommittableConsumerRecord[IO, String, String]
   type Offset      = CommittableOffset[IO]
+  type Record      = ProducerRecord[String, String]
+  type Records     = ProducerRecords[Offset, String, String]
+  type Sent        = ProducerResult[Offset, String, String]
 
   given Show[OffsetAndMetadata] = Show.fromToString

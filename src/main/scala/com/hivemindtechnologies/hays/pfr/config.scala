@@ -4,7 +4,7 @@ import cats.Show
 import cats.derived.*
 import cats.effect.IO
 import cats.syntax.all.*
-import fs2.kafka.{AutoOffsetReset, ConsumerSettings, IsolationLevel}
+import fs2.kafka.{AutoOffsetReset, ConsumerSettings, IsolationLevel, ProducerSettings}
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.config.{SaslConfigs, SslConfigs}
@@ -30,6 +30,8 @@ final case class KafkaConfig(
   maxPollRecords: Int,
   batchCommitSize: Int,
   batchCommitInterval: FiniteDuration,
+  batchSizeBytes: Int,
+  linger: FiniteDuration,
   sasl: SASLConfig
 ) derives CanEqual, Show:
 
@@ -40,6 +42,12 @@ final case class KafkaConfig(
     .withMaxPollRecords(maxPollRecords)
     .withGroupId(group)
     .withIsolationLevel(IsolationLevel.ReadCommitted)
+    .withProperties(sasl.properties)
+
+  val producerSettings = ProducerSettings[IO, String, String]
+    .withBootstrapServers(bootstrapServers)
+    .withBatchSize(batchSizeBytes)
+    .withLinger(linger)
     .withProperties(sasl.properties)
 
 object KafkaConfig:

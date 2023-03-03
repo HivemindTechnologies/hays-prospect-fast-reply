@@ -2,34 +2,20 @@ package com.hivemindtechnologies.hays.pfr
 
 import cats.Show
 import cats.derived.*
-import cats.syntax.all.*
-
-import pureconfig.ConfigReader
-import pureconfig.generic.derivation.default.derivedProduct as deriveReader
-
-import scala.concurrent.duration.FiniteDuration
-
-import cats.Show
-import cats.derived.*
 import cats.effect.IO
 import cats.syntax.all.*
-import com.typesafe.config.{Config, ConfigFactory}
 import fs2.kafka.{AutoOffsetReset, ConsumerSettings, IsolationLevel}
 import org.apache.kafka.clients.CommonClientConfigs
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.config.{SaslConfigs, SslConfigs}
 import pureconfig.ConfigReader
-import pureconfig.error.CannotConvert
 import pureconfig.generic.derivation.default.derivedProduct as deriveReader
 
-import java.sql.DriverManager
-import java.util.Properties
 import scala.concurrent.duration.FiniteDuration
 
 final case class AppConfig(
   service: String,
   inTopic: String,
-  dlqTopic: String,
   kafka: KafkaConfig
 ) derives CanEqual, Show
 

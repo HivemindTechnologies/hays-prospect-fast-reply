@@ -18,10 +18,7 @@ lazy val sfmcConnect = project
   .in(file("."))
   .enablePlugins(JavaAppPackaging, DockerPlugin, AshScriptPlugin)
   .configs(IntegrationTest)
-  .settings(dockerSettings)
-  .settings(dontBuildDocs)
-  .settings(testWithWeaver(Test, IntegrationTest))
-  .settings(integrationTestSettings)
+  .settings(dockerSettings, dontBuildDocs, integrationTestSettings, testWithWeaver(Test, IntegrationTest))
   .settings(
     libraryDependencies := Seq(
       catsCore,

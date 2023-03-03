@@ -23,7 +23,7 @@ class Service(config: AppConfig)(using Log):
       .evalTap[IO, Unit] {
         case (Left(err), in) =>
           log.error(err)(show"Decoding failed for ${in.offset.offsetAndMetadata}")
-        case (Right(bp), in) =>
+        case (Right(bp), _) =>
           sendRecordToMarketingCloud(bp)
       }
       .map(_._2.offset)

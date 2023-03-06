@@ -3,4 +3,6 @@ akhq:
     local:
       properties:
         bootstrap.servers: "kafka:29092"
-
+endpoints:
+  all:
+    port: 8080

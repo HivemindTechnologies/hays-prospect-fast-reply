@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%-22.22thread] %highlight(%-5level) %cyan(%-48.48logger{48}) - %msg%n</pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+
+    <root level="${LOG_LEVEL:-INFO}">
+        <appender-ref ref="STDOUT" />
+    </root>
+
+    <logger name="com.hivemindtechnologies" level="DEBUG" />
+    <logger name="ch.qos.logback" level="INFO" />
+    <logger name="org.apache.kafka" level="ERROR" />
+    <logger name="fs2.kafka" level="ERROR" />
+</configuration>

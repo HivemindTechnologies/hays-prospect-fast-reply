@@ -16,6 +16,7 @@ import scala.concurrent.duration.FiniteDuration
 final case class AppConfig(
   service: String,
   inTopic: String,
+  dlqTopic: String,
   kafka: KafkaConfig
 ) derives CanEqual, Show
 

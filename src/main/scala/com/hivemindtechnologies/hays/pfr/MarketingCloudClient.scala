@@ -4,7 +4,7 @@ import cats.syntax.all.*
 import cats.effect.IO
 
 trait MarketingCloudClient:
-  def send(bp: BusinessPartner): IO[Unit]
+  def send(bp: Request): IO[Unit]
 
 final class DefaultMarketingCloudClient(using Log) extends MarketingCloudClient:
-  def send(bp: BusinessPartner): IO[Unit] = log.info(show"Sending: $bp")
+  def send(bp: Request): IO[Unit] = log.info(show"Sending: $bp")

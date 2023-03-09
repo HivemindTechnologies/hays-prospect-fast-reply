@@ -15,14 +15,17 @@ import scala.concurrent.duration.FiniteDuration
 
 final case class AppConfig(
   service: String,
+  clientID: String,
+  clientSecret: String,
   dataExtensionID: String,
   inTopic: String,
   dlqTopic: String,
   kafka: KafkaConfig
-) derives CanEqual, Show
+) derives CanEqual
 
 object AppConfig:
   given ConfigReader[AppConfig] = deriveReader[AppConfig]
+  given Show[AppConfig] = semiauto.show.contramap(c => c.copy(clientSecret = "***"))
 
 final case class KafkaConfig(
   bootstrapServers: String,

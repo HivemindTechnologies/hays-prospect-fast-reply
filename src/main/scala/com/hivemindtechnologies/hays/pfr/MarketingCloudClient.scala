@@ -12,7 +12,10 @@ import scala.util.chaining.*
 trait MarketingCloudClient:
   def send(bp: Request): IO[Unit]
 
+// see https://github.com/salesforce-marketingcloud/FuelSDK-Java
+// see https://github.com/salesforce-marketingcloud/FuelSDK-Java/blob/v1.6.0/src/main/resources/fuelsdk.properties.template
 // see https://github.com/salesforce-marketingcloud/FuelSDK-Java/blob/v1.6.0/src/test/java/com/exacttarget/fuelsdk/ETDataExtensionTest.java
+// see http://salesforce-marketingcloud.github.io/FuelSDK-Java/
 
 final class DefaultMarketingCloudClient private (config: AppConfig, clientIO: IO[ETClient])(using Log) extends MarketingCloudClient:
   def send(request: Request): IO[Unit] =
@@ -48,3 +51,9 @@ object DefaultMarketingCloudClient:
   def from(config: AppConfig)(using Log): Resource[IO, MarketingCloudClient] =
     for client <- Resource.make(IO.blocking(ETClient("")))(_ => IO.unit)
     yield DefaultMarketingCloudClient(config, IO(client))
+
+  def clientConfiguration(config: AppConfig): IO[ETConfiguration] =
+    IO(ETConfiguration().tap { cfg =>
+      cfg.set("clientId", config.clientID)
+      cfg.set("clientSecret", config.clientSecret)
+    })

@@ -5,9 +5,10 @@ import cats.effect.IO
 import cats.effect.kernel.Resource
 import cats.syntax.all.*
 import com.exacttarget.fuelsdk.*
-import com.exacttarget.fuelsdk.ETResult.Status
+import com.exacttarget.fuelsdk.ETResult.Status.OK
 
 import scala.util.chaining.*
+import org.apache.logging.log4j.Logger
 
 trait MarketingCloudClient:
   def send(bp: Request): IO[Unit]
@@ -24,7 +25,7 @@ final class DefaultMarketingCloudClient private (config: AppConfig, clientIO: IO
       extension <- extensionIO
       newRow    <- rowFor(request)
       response  <- IO.blocking(extension.insert(newRow))
-      _         <- IO.raiseUnless(response.getStatus == Status.OK)(
+      _         <- IO.raiseUnless(response.getStatus == OK)(
                      Exception(show"Could not insert row: ${response.getResponseCode} - ${response.getResponseMessage}")
                    )
     yield ()
@@ -33,7 +34,7 @@ final class DefaultMarketingCloudClient private (config: AppConfig, clientIO: IO
     for
       client   <- clientIO
       response <- IO.blocking(client.retrieve(classOf[ETDataExtension], show"id=${config.dataExtensionID}"))
-      _        <- IO.raiseUnless(response.getStatus == Status.OK)(
+      _        <- IO.raiseUnless(response.getStatus == OK)(
                     Exception(show"Could not get data extension '${config.dataExtensionID}': ${response.getResponseCode} - ${response.getResponseMessage}")
                   )
     yield response.getObject
@@ -49,11 +50,11 @@ final class DefaultMarketingCloudClient private (config: AppConfig, clientIO: IO
 
 object DefaultMarketingCloudClient:
   def from(config: AppConfig)(using Log): Resource[IO, MarketingCloudClient] =
-    for client <- Resource.make(IO.blocking(ETClient("")))(_ => IO.unit)
-    yield DefaultMarketingCloudClient(config, IO(client))
+    val newClient = 
+      for
+        settings <- Setting.allOf(config.marketingCloud).foldLeft(IO(ETConfiguration()))((accu, f) => f(accu))
+        client   <- IO.blocking(ETClient(settings))
+      yield client
 
-  def clientConfiguration(config: AppConfig): IO[ETConfiguration] =
-    IO(ETConfiguration().tap { cfg =>
-      cfg.set("clientId", config.clientID)
-      cfg.set("clientSecret", config.clientSecret)
-    })
+    for client <- Resource.make(newClient)(_ => IO.unit)
+    yield DefaultMarketingCloudClient(config, IO(client))

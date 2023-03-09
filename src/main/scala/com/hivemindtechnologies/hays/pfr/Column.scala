@@ -12,4 +12,4 @@ object Column:
     def serialize(a: A): String = a.toString
 
   def valuesOf[A](a: A)(using inst: K0.ProductInstances[Column, A]): List[String] = 
-    inst.foldRight(a)(List.empty[String])([t] => (cw: Column[t], v: t, acc: List[String]) => cw.serialize(v) :: acc)
+    inst.foldRight(a)(List.empty[String])([a] => (cw: Column[a], v: a, acc: List[String]) => cw.serialize(v) :: acc)

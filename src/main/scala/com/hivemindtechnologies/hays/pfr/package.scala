@@ -46,4 +46,4 @@ def exponentialBackoff(initial: FiniteDuration, base: Double, jitter: Double, ma
 
 given Random[IO] = Random.javaUtilConcurrentThreadLocalRandom[IO]
 
-inline def columnNamesOf[A](using m: Mirror.Of[A]) = compiletime.constValueTuple[m.MirroredElemLabels]
+given [A <: Enum[A]]: Eqv[A] = CanEqual.derived

@@ -18,7 +18,7 @@ object Main extends IOApp.Simple:
       config    <- configFX
       _         <- log.info(show"Service started")
       _         <- log.debug(config.show)
-      client     = Resource.make(IO(DefaultMarketingCloudClient()))(_ => IO.unit)
+      client     = DefaultMarketingCloudClient.from(config)
       nothing   <- client.use(Service(config, _).dataflow.logErrorAndRestart.compile.drain)
     yield nothing
 

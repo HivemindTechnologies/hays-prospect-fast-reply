@@ -54,4 +54,4 @@ object ServiceTest extends IOSuite:
     for
       rid   <- IO.randomUUID
       begin <- IO.realTimeInstant
-    yield Request(UUID(0, id), "First", "Last", "EN", "some@ema.il", "prospect-ID", "#1", rid, "channel", begin, 0d, "task", "description", "key")
+    yield Request(UUID(0, id), "First", "Last", "EN", "UK", "some@ema.il", "prospect-ID", "#1", rid, "channel", begin, 0d, "task", "description", "key")

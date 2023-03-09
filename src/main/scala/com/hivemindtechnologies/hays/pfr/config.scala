@@ -15,6 +15,7 @@ import scala.concurrent.duration.FiniteDuration
 
 final case class AppConfig(
   service: String,
+  dataExtensionID: String,
   inTopic: String,
   dlqTopic: String,
   kafka: KafkaConfig

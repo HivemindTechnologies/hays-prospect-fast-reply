@@ -31,14 +31,14 @@ lazy val sfmcConnect = project
       fs2Kafka,
       kittens,
       log4Cats,
-      log4JBridge,
       logback,
       marketingCloudSDK,
       pureconfig,
       pureconfigCE,
-      shapeless
+      shapeless,
+      slf4JInsteadOfLog4J
     ),
-    excludeDependencies  += ExclusionRule("org.apache.logging.log4j", "log4j-core")
+    excludeDependencies  += ExclusionRule("org.apache.logging.log4j")
   )
 
 lazy val dockerSettings = Seq(
@@ -81,7 +81,6 @@ lazy val fs2IO               = fs2.organization                      %% "fs2-io"
 lazy val fs2Kafka            = "com.github.fd4s"                     %% "fs2-kafka"                  % "2.5.0"
 lazy val kittens             = "org.typelevel"                       %% "kittens"                    % "3.0.0"
 lazy val log4Cats            = "org.typelevel"                       %% "log4cats-slf4j"             % "2.5.0"
-lazy val log4JBridge         = "org.apache.logging.log4j"             % "log4j-to-slf4j"             % "2.20.0"
 lazy val logback             = "ch.qos.logback"                       % "logback-classic"            % "1.4.5"
 lazy val marketingCloudSDK   = "com.github.salesforce-marketingcloud" % "fuelsdk"                    % "1.6.0"
 lazy val pureconfig          = "com.github.pureconfig"               %% "pureconfig-core"            % "0.17.2"
@@ -89,6 +88,7 @@ lazy val pureconfigCE        = pureconfig.organization               %% "purecon
 lazy val scalaCheck          = "org.scalacheck"                      %% "scalacheck"                 % "1.17.0"
 lazy val scalaCheckCats      = "io.chrisdavenport"                   %% "cats-scalacheck"            % "0.3.2"
 lazy val shapeless           = "org.typelevel"                       %% "shapeless3-deriving"        % "3.3.0"
+lazy val slf4JInsteadOfLog4J = "org.slf4j"                            % "log4j-over-slf4j"           % "2.0.6"
 lazy val testContainersKafka = "com.dimafeng"                        %% "testcontainers-scala-kafka" % "0.40.12"
 lazy val weaver              = "com.disneystreaming"                 %% "weaver-cats"                % "0.8.1"
 lazy val weaverScalaCheck    = weaver.organization                   %% "weaver-scalacheck"          % weaver.revision

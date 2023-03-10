@@ -8,7 +8,6 @@ import com.exacttarget.fuelsdk.*
 import com.exacttarget.fuelsdk.ETResult.Status.OK
 
 import scala.util.chaining.*
-import org.apache.logging.log4j.Logger
 
 trait MarketingCloudClient:
   def send(bp: Request): IO[Unit]

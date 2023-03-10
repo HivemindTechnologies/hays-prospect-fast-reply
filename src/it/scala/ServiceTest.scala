@@ -30,10 +30,10 @@ object ServiceTest extends IOSuite:
       config     <- Main.configFX.map(c => c.copy(kafka = c.kafka.copy(bootstrapServers = bootstrapServers)))
       _          <- log.debug(config.show)
       given Kafka = Kafka(config.kafka)
-      collector  <- Ref.empty[IO, Vector[BusinessPartner]]
+      collector  <- Ref.empty[IO, Vector[Request]]
       client      = new MarketingCloudClient:
-                      override def send(bp: BusinessPartner) = collector.getAndUpdate(_ :+ bp).void
-      input       = Vector(BusinessPartner("meep"), BusinessPartner("moop"))
+                      override def send(bp: Request) = collector.getAndUpdate(_ :+ bp).void
+      input      <- (1 to 2).toVector.traverse(request)
       _          <- input.traverse(record => send(ProducerRecord(config.inTopic, "some kinda key", record.asJson.spaces2)).timeout(5.seconds))
       _          <- Service(config, client).dataflow.compile.drain.background.use(_ => IO.sleep(5.seconds))
       output     <- collector.get
@@ -49,3 +49,9 @@ object ServiceTest extends IOSuite:
 
   def send(record: Record)(using kafka: Kafka): IO[Unit] =
     Stream(ProducerRecords.one(record)).through(kafka.producer).compile.drain
+
+  def request(id: Int): IO[Request] =
+    for
+      rid   <- IO.randomUUID
+      begin <- IO.realTimeInstant
+    yield Request(UUID(0, id), "First", "Last", "EN", "UK", "some@ema.il", "prospect-ID", "#1", rid, "channel", begin, 0d, "task", "description", "key")

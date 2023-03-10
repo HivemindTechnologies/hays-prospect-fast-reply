@@ -34,7 +34,7 @@ final case class MarketingCloudClientConfig(
   useOAuth2Authentication: Boolean,
   accountId: Option[String],
   scope: Option[String]
-) derives CanEqual
+) derives CanEqual   
 
 object MarketingCloudClientConfig:
   given ConfigReader[MarketingCloudClientConfig] = deriveReader[MarketingCloudClientConfig]

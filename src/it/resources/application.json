@@ -1,0 +1,8 @@
+{
+  "app": {
+    "marketing-cloud": {
+      "client-id": "x",
+      "client-secret": "y"
+    }
+  }
+}

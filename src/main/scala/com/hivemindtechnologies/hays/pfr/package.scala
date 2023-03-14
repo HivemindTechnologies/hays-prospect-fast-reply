@@ -1,6 +1,6 @@
 package com.hivemindtechnologies.hays.pfr
 
-import cats.{Eq, TraverseFilter}
+import cats.{Eq, Show, TraverseFilter}
 import cats.effect.IO
 import cats.effect.kernel.Clock
 import cats.effect.std.Random
@@ -18,7 +18,13 @@ inline def log(using Log): Logger[IO] = Logger[IO]
 
 type Eqv[A] = CanEqual[A, A]
 
-given [A: Eqv] : Eq[A] = Eq.fromUniversalEquals
+given [A: Eqv]: Eq[A] = Eq.fromUniversalEquals
+
+given Random[IO] = Random.javaUtilConcurrentThreadLocalRandom[IO]
+
+given [A <: Enum[A]]: Eqv[A] = CanEqual.derived
+
+given [A <: String & Singleton]: Show[A] = Show.show(identity)
 
 extension [A](inline io: IO[A]) inline def stream: Stream[IO, A] = Stream.eval(io)
 
@@ -43,7 +49,3 @@ def exponentialBackoff(initial: FiniteDuration, base: Double, jitter: Double, ma
     val upper = min(minMillis * pow(base, attempt), maxMillis)
     val diff  = (upper - minMillis) * jitAmount
     Random[IO].betweenDouble(upper - diff, upper + 1d).map(_.toLong.millis)
-
-given Random[IO] = Random.javaUtilConcurrentThreadLocalRandom[IO]
-
-given [A <: Enum[A]]: Eqv[A] = CanEqual.derived

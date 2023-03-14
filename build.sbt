@@ -23,22 +23,21 @@ lazy val sfmcConnect = project
     libraryDependencies ++= Seq(
       catsCore,
       catsEffect,
+      catsTime,
       circeCore,
       circeGeneric,
       circeParser,
       fs2,
       fs2IO,
       fs2Kafka,
+      http4sCirce,
+      http4sClient,
       kittens,
       log4Cats,
       logback,
-      marketingCloudSDK,
       pureconfig,
-      pureconfigCE,
-      shapeless,
-      slf4JInsteadOfLog4J
-    ),
-    excludeDependencies  += ExclusionRule("org.apache.logging.log4j")
+      pureconfigCE
+    )
   )
 
 lazy val dockerSettings = Seq(
@@ -71,24 +70,24 @@ lazy val integrationTestSettings = Defaults.itSettings ++ Seq(
   libraryDependencies                 += testContainersKafka % IntegrationTest
 )
 
-lazy val catsCore            = "org.typelevel"                       %% "cats-core"                  % "2.9.0"
-lazy val catsEffect          = "org.typelevel"                       %% "cats-effect"                % "3.4.8"
-lazy val circeCore           = "io.circe"                            %% "circe-core"                 % "0.14.4"
-lazy val circeGeneric        = circeCore.organization                %% "circe-generic"              % circeCore.revision
-lazy val circeParser         = circeCore.organization                %% "circe-parser"               % circeCore.revision
-lazy val fs2                 = "co.fs2"                              %% "fs2-core"                   % "3.6.1"
-lazy val fs2IO               = fs2.organization                      %% "fs2-io"                     % fs2.revision
-lazy val fs2Kafka            = "com.github.fd4s"                     %% "fs2-kafka"                  % "2.5.0"
-lazy val kittens             = "org.typelevel"                       %% "kittens"                    % "3.0.0"
-lazy val log4Cats            = "org.typelevel"                       %% "log4cats-slf4j"             % "2.5.0"
-lazy val logback             = "ch.qos.logback"                       % "logback-classic"            % "1.4.5"
-lazy val marketingCloudSDK   = "com.github.salesforce-marketingcloud" % "fuelsdk"                    % "1.6.0"
-lazy val pureconfig          = "com.github.pureconfig"               %% "pureconfig-core"            % "0.17.2"
-lazy val pureconfigCE        = pureconfig.organization               %% "pureconfig-cats-effect"     % pureconfig.revision
-lazy val scalaCheck          = "org.scalacheck"                      %% "scalacheck"                 % "1.17.0"
-lazy val scalaCheckCats      = "io.chrisdavenport"                   %% "cats-scalacheck"            % "0.3.2"
-lazy val shapeless           = "org.typelevel"                       %% "shapeless3-deriving"        % "3.3.0"
-lazy val slf4JInsteadOfLog4J = "org.slf4j"                            % "log4j-over-slf4j"           % "2.0.6"
-lazy val testContainersKafka = "com.dimafeng"                        %% "testcontainers-scala-kafka" % "0.40.12"
-lazy val weaver              = "com.disneystreaming"                 %% "weaver-cats"                % "0.8.1"
-lazy val weaverScalaCheck    = weaver.organization                   %% "weaver-scalacheck"          % weaver.revision
+lazy val catsCore            = "org.typelevel"           %% "cats-core"                  % "2.9.0"
+lazy val catsEffect          = "org.typelevel"           %% "cats-effect"                % "3.4.8"
+lazy val catsTime            = "org.typelevel"           %% "cats-time"                  % "0.5.1"
+lazy val circeCore           = "io.circe"                %% "circe-core"                 % "0.14.5"
+lazy val circeGeneric        = circeCore.organization    %% "circe-generic"              % circeCore.revision
+lazy val circeParser         = circeCore.organization    %% "circe-parser"               % circeCore.revision
+lazy val fs2                 = "co.fs2"                  %% "fs2-core"                   % "3.6.1"
+lazy val fs2IO               = fs2.organization          %% "fs2-io"                     % fs2.revision
+lazy val fs2Kafka            = "com.github.fd4s"         %% "fs2-kafka"                  % "2.5.0"
+lazy val http4sCirce         = http4sClient.organization %% "http4s-circe"               % http4sClient.revision
+lazy val http4sClient        = "org.http4s"              %% "http4s-ember-client"        % "0.23.18"
+lazy val kittens             = "org.typelevel"           %% "kittens"                    % "3.0.0"
+lazy val log4Cats            = "org.typelevel"           %% "log4cats-slf4j"             % "2.5.0"
+lazy val logback             = "ch.qos.logback"           % "logback-classic"            % "1.4.5"
+lazy val pureconfig          = "com.github.pureconfig"   %% "pureconfig-core"            % "0.17.2"
+lazy val pureconfigCE        = pureconfig.organization   %% "pureconfig-cats-effect"     % pureconfig.revision
+lazy val scalaCheck          = "org.scalacheck"          %% "scalacheck"                 % "1.17.0"
+lazy val scalaCheckCats      = "io.chrisdavenport"       %% "cats-scalacheck"            % "0.3.2"
+lazy val testContainersKafka = "com.dimafeng"            %% "testcontainers-scala-kafka" % "0.40.12"
+lazy val weaver              = "com.disneystreaming"     %% "weaver-cats"                % "0.8.1"
+lazy val weaverScalaCheck    = weaver.organization       %% "weaver-scalacheck"          % weaver.revision

@@ -12,9 +12,13 @@ import pureconfig.ConfigReader
 import pureconfig.generic.derivation.default.derivedProduct as deriveReader
 
 import scala.concurrent.duration.FiniteDuration
+import org.http4s.Uri
+import pureconfig.error.CannotConvert
 
 final case class AppConfig(
   service: String,
+  senderEmail: String,
+  senderName: String,
   marketingCloud: MarketingCloudClientConfig,
   dataExtensionID: String,
   inTopic: String,
@@ -26,19 +30,19 @@ object AppConfig:
   given ConfigReader[AppConfig] = deriveReader[AppConfig]
 
 final case class MarketingCloudClientConfig(
-  clientId: String,
+  clientID: String,
   clientSecret: String,
-  authEndpoint: Option[String],
-  endpoint: Option[String],
-  soapEndpoint: Option[String],
-  useOAuth2Authentication: Boolean,
-  accountId: Option[String],
-  scope: Option[String]
-) derives CanEqual   
+  httpMaxRetryWait: FiniteDuration,
+  httpMaxRetries: Int,
+  authEndpoint: Uri,
+  endpoint: Uri,
+  accountID: String
+) derives CanEqual
 
 object MarketingCloudClientConfig:
   given ConfigReader[MarketingCloudClientConfig] = deriveReader[MarketingCloudClientConfig]
-  given Show[MarketingCloudClientConfig] = semiauto.show.contramap(c => c.copy(clientSecret = "***"))
+  given Show[MarketingCloudClientConfig]         = semiauto.show.contramap(c => c.copy(clientSecret = "***"))
+  given ConfigReader[Uri]                        = ConfigReader[String].emap(s => Uri.fromString(s).leftMap(f => CannotConvert(s, classOf[Uri].getName, f.message)))
 
 final case class KafkaConfig(
   bootstrapServers: String,

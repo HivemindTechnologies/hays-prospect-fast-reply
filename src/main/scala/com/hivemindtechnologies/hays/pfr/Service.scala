@@ -12,6 +12,7 @@ import scala.concurrent.duration.*
 import scala.util.chaining.*
 
 import Kafka.{*, given}
+import JSON.given
 
 class Service(config: AppConfig, client: MarketingCloudClient)(using Log):
   val kafka = Kafka(config.kafka)

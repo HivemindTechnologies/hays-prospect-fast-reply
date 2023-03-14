@@ -21,6 +21,7 @@ import java.util.UUID
 import scala.concurrent.duration.*
 
 import Kafka.*
+import JSON.given
 
 object ServiceTest extends IOSuite:
 
@@ -53,5 +54,4 @@ object ServiceTest extends IOSuite:
   def request(id: Int): IO[Request] =
     for
       rid   <- IO.randomUUID
-      begin <- IO.realTimeInstant
-    yield Request(UUID(0, id), "First", "Last", "EN", "UK", "some@ema.il", "prospect-ID", "#1", rid, "channel", begin, 0d, "task", "description", "key")
+    yield Request(UUID(0, id), "First", "Last", "EN", "UK", "some@ema.il", "prospect-ID", "#1", rid, "channel", "08.03.2023", 0d, "task", "description")
